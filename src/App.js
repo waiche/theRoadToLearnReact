@@ -47,7 +47,7 @@ class App extends Component {
     }
 
     onSearchSubmit(event) {
-        const { searchTerm } = this.state;
+        const {searchTerm} = this.state;
         this.setState({searchKey: searchTerm});
 
         if (this.needsToSearchTopStories(searchTerm)) {
@@ -57,13 +57,13 @@ class App extends Component {
     }
 
     setSearchTopStories(result) {
-        const {hits, page } = result;
+        const {hits, page} = result;
         const {searchKey, results} = this.state;
 
         const oldHits = results && results[searchKey]
             ? results[searchKey].hits
             : [];
-        const  updateHits = [
+        const updateHits = [
             ...oldHits,
             ...hits
         ];
@@ -80,8 +80,8 @@ class App extends Component {
     }
 
     onDismiss(id) {
-        const {searchKey, results } = this.state;
-        const {hits, page } = results[searchKey];
+        const {searchKey, results} = this.state;
+        const {hits, page} = results[searchKey];
 
         const isNotId = item => item.objectID !== id;
         const updatedHits = hits.filter(isNotId);
@@ -122,7 +122,7 @@ class App extends Component {
         const list = (
             results &&
             results[searchKey] &&
-               results[searchKey].hits
+            results[searchKey].hits
         ) || [];
 
         /*if (error) {
@@ -160,20 +160,30 @@ class App extends Component {
     }
 }
 
-const Search = ({value, onChange, onSubmit, children}) => {
-    // do something
-    return (
-        <form onSubmit={onSubmit}>
-            <input
-            type="text"
-            value={value}
-            onChange={onChange}
-        />
-        <button type="submit">
-        {children}
-        </button>
-        </form>
-    )
+class Search extends Component {
+    componentDidMount() {
+        if (this.input) {
+            this.input.focus();
+        }
+    }
+
+    render() {
+        const {value, onChange, onSubmit, children} = this.props;
+        // do something
+        return (
+            <form onSubmit={onSubmit}>
+                <input
+                    type="text"
+                    value={value}
+                    onChange={onChange}
+                    ref={el => this.input = el}
+                />
+                <button type="submit">
+                    {children}
+                </button>
+            </form>
+        )
+    }
 }
 
 Search.propTypes = {
@@ -225,28 +235,29 @@ const Table = ({list, onDismiss}) =>
 
 Table.propTypes = {
     list: PropTypes.arrayOf(
-      PropTypes.shape(({
-         objectID: PropTypes.string.isRequired,
-         author: PropTypes.string,
-         url: PropTypes.string,
-         num_comments: PropTypes.number,
-         points: PropTypes.number,
-      }))
+        PropTypes.shape(({
+            objectID: PropTypes.string.isRequired,
+            author: PropTypes.string,
+            url: PropTypes.string,
+            num_comments: PropTypes.number,
+            points: PropTypes.number,
+        }))
     ),
     onDismiss: PropTypes.func.isRequired,
 }
 
 const Button = ({
-        onClick,
-        className,
-        children}) =>
-        <button
-            onClick={onClick}
-            className={className}
-            type="button"
-        >
-            {children}
-        </button>
+                    onClick,
+                    className,
+                    children
+                }) =>
+    <button
+        onClick={onClick}
+        className={className}
+        type="button"
+    >
+        {children}
+    </button>
 
 Button.defaultProps = {
     className: '',
